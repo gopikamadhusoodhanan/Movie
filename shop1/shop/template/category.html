@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block metadescription %}
+  {% if category %}
+    {{ category.description|truncatewords:155 }}
+  {% else %}
+    Welcome to ABC store where you can buy any products
+  {% endif %}
+
+{% endblock %}
+
+{% block title %}
+  {% if category %}
+    {{ category.name }} - shop cart
+  {% else %}
+    See our new collections - shop cart
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {% if category %}
+    <div >
+      <div>
+        <p><a href="{% url 'ecommerceapp:allProdCat' %}">Our Products</a></p>
+      </div>
+    </div>
+    <div>
+      <img src="{{ category.image.url }}" alt="{{ category.name }}">
+    </div><br>
+    <div>
+      <h1>{{category.name}}</h1>
+      <p>{{category.description}}</p>
+    </div>
+  {% else %}
+    <div>
+      <img src="{% static 'img/Banner.png' %}" alt="Our Products" width="1250px">
+    </div><br>
+    <div>
+      <h1>Our Products Collections</h1>
+      <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
+    </div>
+  {% endif %}
+  <div class="container">
+    <div class="row mx_auto">
+      {% for product in products.object_list %}
+        <div class="my_bottom_margin col-9 col-sm-12 col-md-4 xol-lg-4">
+          <div class="card text-center" style="min-width:18rem;">
+            <a href="{{ product.get_url }}">
+              <img class="card-img-top my_image" src="{{ product.image.url }}" alt="{{ product.name }}" width="300px" height="300px">
+            </a>
+            <div class="card body">
+              <h4>{{ product.name }}</h4>
+              <p>{{ product.price }}</p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div>
+      <div class="mx_auto">
+        {% if products.paginator.num_pages > 1 %}
+          <hr>
+          <div class="text-center">
+            {% for pg in products.paginator.page_range %}
+            <a href="?page={{pg}}" class="btn bnt-light btn-sm {% if products.number == pg %} active {% endif %}">{{pg}}</a>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
